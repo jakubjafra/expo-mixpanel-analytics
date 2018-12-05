@@ -110,24 +110,30 @@ export default class ExpoMixpanelAnalytics {
     }
 
     _people(operation, props) {
-        if (this.userId) {
-            const data = {
-                '$token': this.token,
-                '$distinct_id': this.userId,
-            };
-            data[`$${operation}`] = props;
-
-            this._pushProfile(data);
+        if (!this.userId) {
+            return;
         }
+
+        const data = {
+            '$token': this.token,
+            '$distinct_id': this.userId,
+        };
+        data[`$${operation}`] = props;
+
+        this._pushProfile(data);
     }
 
     _pushEvent(event) {
+        if (!this.userId) {
+            return;
+        }
+
         let data = {
             event: event.name,
             properties: event.props || {},
         };
 
-        if (!data.properties.distinct_id && this.userId) {
+        if (this.userId) {
             data.properties.distinct_id = this.userId;
         }
 
