@@ -8,13 +8,17 @@ const MIXPANEL_API_URL = 'https://api.mixpanel.com';
 const isIosPlatform = Platform.OS === 'ios';
 
 export default class ExpoMixpanelAnalytics {
+    static getClientId() {
+        return Constants.deviceId;
+    }
+
     constructor(token) {
         this.ready = false;
         this.queue = [];
 
         this.token = token;
         this.userId = null;
-        this.clientId = Constants.deviceId;
+        this.clientId = ExpoMixpanelAnalytics.getClientId();
         this.identify(this.clientId);
 
         Constants
