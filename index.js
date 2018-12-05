@@ -39,6 +39,16 @@ export default class ExpoMixpanelAnalytics {
             });
     }
 
+    alias(newId, oldId = this.clientId) {
+        this.queue.push({
+            name: '$create_alias',
+            props: {
+                distinct_id: oldId,
+                alias: newId,
+            },
+        });
+    }
+
     track(name, props) {
         this.queue.push({
             name,
@@ -113,7 +123,7 @@ export default class ExpoMixpanelAnalytics {
             properties: event.props || {},
         };
 
-        if (this.userId) {
+        if (!data.properties.distinct_id && this.userId) {
             data.properties.distinct_id = this.userId;
         }
 
